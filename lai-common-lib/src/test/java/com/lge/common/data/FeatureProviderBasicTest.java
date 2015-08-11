@@ -7,14 +7,12 @@ import org.junit.Test;
 
 public class FeatureProviderBasicTest {
     FeatureProvider provider;
-    
-    @Before
-    public void setUp() {
+
+    @Before public void setUp() {
         provider = new FeatureProvider();
     }
-    
-    @Test
-    public void checkInstanceNotNull() {
+
+    @Test public void checkInstanceNotNull() {
         assertNotNull(provider);
     }
 }

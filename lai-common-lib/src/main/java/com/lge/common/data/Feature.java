@@ -36,114 +36,66 @@ public class Feature {
     public String readPermission;
     public String writePermission;
 
-    /**
-     * @param category name declared in "category android:name="
-     */
     public void addCategory(String category) {
         categoryList.add(category);
     }
 
-    /**
-     * @return string of categories, which are separated with carriage return between categories
-     */
     public String getCategories() {
         return getDataValues("category");
     }
 
-    /**
-     * @param scheme name declared in "data android:scheme="
-     */
     public void addScheme(String scheme) {
         schemeList.add(scheme);
     }
 
-    /**
-     * @return string of schemes, which are separated with carriage return  between schemes
-     */
     public String getSchemes() {
         return getDataValues("scheme");
     }
 
-    /**
-     * @param host name declared in "data android:port="
-     */
     public void addHost(String host) {
         hostList.add(host);
     }
 
-    /**
-     * @return string of hosts, which are separated with carriage return between hosts
-     */
     public String getHosts() {
         return getDataValues("host");
     }
 
-    /**
-     * @param port name declared in "data android:port="
-     */
     public void addPort(String port) {
         portList.add(port);
     }
 
-    /**
-     * @return string of ports, which are separated with carriage return between ports
-     */
     public String getPorts() {
         return getDataValues("port");
     }
 
-    /**
-     * @param path name declared in "data android:path="
-     */
     public void addPath(String path) {
         pathList.add(path);
     }
 
-    /**
-     * @return string of paths, which are separated with carriage return between paths
-     */
     public String getPaths() {
         return getDataValues("path");
     }
 
-    /**
-     * @param pathPattern name declared in "data android:pathPattern="
-     */
     public void addPathPattern(String pathPattern) {
         pathPatternList.add(pathPattern);
     }
 
-    /**
-     * @return string of pathPatterns, which are separated with carriage return between pathPatterns
-     */
     public String getPathPatterns() {
         return getDataValues("pathPattern");
     }
 
-    /**
-     * @param pathPrefix name declared in "data android:pathPrefix="
-     */
     public void addPathPrefix(String pathPrefix) {
         pathPrefixList.add(pathPrefix);
     }
 
-    /**
-     * @return string of pathPrefixes, which are separated with carriage return between pathPrefixes
-     */
     public String getPathPrefixes() {
         return getDataValues("pathPrefix");
     }
 
-    /**
-     * @param mimeType name declared in "data android:mimeType="
-     */
     public void addMimeType(String mimeType) {
         mimeTypeList.add(mimeType);
     }
 
-    /**
-     * @return string of mimeTypes, which are separated with carriage return between mimeTypes
-     */
     public String getMimeTypes() {
         return getDataValues("mimeType");
     }
@@ -173,11 +125,6 @@ public class Feature {
         return Joiner.on('\n').skipNulls().join(datas);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Feature) {

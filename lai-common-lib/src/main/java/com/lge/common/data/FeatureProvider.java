@@ -12,24 +12,14 @@ public class FeatureProvider {
     public String versionName;
     public List<Feature> featureList = Lists.newArrayList();
 
-    
-    /**
-     * @param feature add single feature object
-     */
     public void addFeature(Feature feature) {
         featureList.add(feature);
     }
 
-    /**
-     * @param featureList add multiple feature objects
-     */
     public void addAllFeatures(List<Feature> featureList) {
         this.featureList.addAll(featureList);
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof FeatureProvider) {
