@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>CallerInfo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.validation</a> &gt; <span class="el_source">CallerInfo.java</span></div><h1>CallerInfo.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.validation;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.MoreObjects;
+import com.lge.lai.common.annotation.InterfaceWith.Call;
+import com.lge.lai.common.annotation.InterfaceWith.Component;
+
+public class CallerInfo {
+<span class="nc" id="L11">    static Logger LOGGER = LogManager.getLogger(InterfaceValidator.class.getName());</span>
+
+    public String toPackage;
+    public Call callType;
+    public Component componentType;
+
+<span class="nc" id="L17">    public CallerInfo(String toPackage, Call callType, Component componentType) {</span>
+<span class="nc" id="L18">        this.toPackage = toPackage;</span>
+<span class="nc" id="L19">        this.callType = callType;</span>
+<span class="nc" id="L20">        this.componentType = componentType;</span>
+<span class="nc" id="L21">        LOGGER.info(&quot;CallerInfo: &quot; + this);</span>
+<span class="nc" id="L22">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L26">        return MoreObjects.toStringHelper(this)</span>
+                .add(&quot;toPackage&quot;, toPackage)
+                .add(&quot;callType&quot;, callType)
+                .add(&quot;componentType&quot;, componentType)
+                .toString();
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

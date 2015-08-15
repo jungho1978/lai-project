@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>LGAppInterfaceDB.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.db</a> &gt; <span class="el_source">LGAppInterfaceDB.java</span></div><h1>LGAppInterfaceDB.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.db;
+
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.android.internal.annotations.VisibleForTesting;
+import com.lge.lai.common.data.Feature;
+import com.lge.lai.common.data.FeatureProvider;
+import com.lge.lai.common.db.dao.ASBCategoryDAO;
+import com.lge.lai.common.db.dao.ASBDAO;
+import com.lge.lai.common.db.dao.ASBMimeDAO;
+import com.lge.lai.common.db.dao.ASBUriDAO;
+import com.lge.lai.common.db.dao.DAOFactory;
+import com.lge.lai.common.db.dao.ProviderDAO;
+import com.lge.lai.common.db.dao.SQL;
+import com.lge.lai.common.db.dto.ASB;
+import com.lge.lai.common.db.dto.ASBCategory;
+import com.lge.lai.common.db.dto.ASBMime;
+import com.lge.lai.common.db.dto.ASBUri;
+import com.lge.lai.common.db.dto.Provider;
+
+<span class="nc" id="L24">public class LGAppInterfaceDB {</span>
+<span class="fc" id="L25">    static Logger LOGGER = LogManager.getLogger(LGAppInterfaceDB.class.getName());</span>
+    private static final String SPEICIFIC_KEY = &quot;LGAppIF.db&quot;;
+
+    private static final String UPDATED_BY_MANIFEST = &quot;manifest&quot;;
+    private static final String UPDATED_BY_JAVADOC = &quot;javadoc&quot;;
+
+    private static final String DEFAULT_DESC = &quot;description&quot;;
+    private static final String DEFAULT_TABLE = &quot;table&quot;;
+    private static final String DEFAULT_PRIMARY_KEY = &quot;_id&quot;;
+
+<span class="fc" id="L35">    private static DAOFactory daoFactory = DAOFactory.getInstance(SPEICIFIC_KEY);</span>
+    
+    @VisibleForTesting
+    protected static void reloadDAOFactory(String key) {
+<span class="fc" id="L39">        daoFactory = DAOFactory.getInstance(key);</span>
+<span class="fc" id="L40">    }</span>
+
+    public static void write(FeatureProvider fp) {
+<span class="fc" id="L43">        write(fp, &quot;&quot;);</span>
+<span class="fc" id="L44">    }</span>
+
+    public static void write(FeatureProvider fp, String manifestPath) {
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (fp == null) {</span>
+<span class="fc" id="L48">            throw new LGAppInterfaceDBException(&quot;nothing to write&quot;);</span>
+        }
+
+<span class="fc" id="L51">        String packageName = fp.packageName;</span>
+<span class="fc" id="L52">        String versionName = fp.versionName;</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (Feature feature : fp.featureList) {</span>
+<span class="fc" id="L55">            long id = 0L;</span>
+<span class="fc" id="L56">            String type = feature.type;</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">            if (type.equalsIgnoreCase(&quot;provider&quot;)) {</span>
+<span class="fc" id="L58">                id = createProviderFeature(packageName, versionName, feature);</span>
+            } else {
+<span class="fc" id="L60">                id = createASBFeature(packageName, versionName, feature);</span>
+            }
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            if (!isEmpty(manifestPath)) {</span>
+<span class="nc" id="L63">                updateManifestPath(type, id, manifestPath);</span>
+            }
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">    }</span>
+
+    private static long createProviderFeature(String packageName, String versionName, Feature feature) {
+<span class="fc" id="L69">        Provider provider = new Provider(versionName, feature.type, DEFAULT_DESC, packageName, feature.className,</span>
+                DEFAULT_TABLE, feature.readPermission, feature.writePermission, feature.authorities,
+                DEFAULT_PRIMARY_KEY, UPDATED_BY_MANIFEST);
+<span class="fc" id="L72">        return daoFactory.getProviderDAO().create(provider);</span>
+    }
+
+    private static long createASBFeature(String packageName, String versionName, Feature feature) {
+<span class="fc" id="L76">        String type = feature.type;</span>
+<span class="fc" id="L77">        String className = feature.className;</span>
+<span class="fc" id="L78">        String actionName = feature.actionName;</span>
+
+<span class="fc" id="L80">        ASB asb = new ASB(versionName, type, DEFAULT_DESC, packageName, className, actionName, UPDATED_BY_MANIFEST);</span>
+<span class="fc" id="L81">        long asbId = daoFactory.getASBDAO().create(asb);</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (asbId == -1) {</span>
+<span class="nc" id="L83">            return -1;</span>
+        }
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        for (String category : feature.categoryList) {</span>
+<span class="fc" id="L87">            ASBCategory asbCategory = new ASBCategory(versionName, type, DEFAULT_DESC, packageName, className,</span>
+                    actionName, category, UPDATED_BY_MANIFEST);
+<span class="fc" id="L89">            daoFactory.getASBCategoryDAO(asbId).create(asbCategory);</span>
+<span class="fc" id="L90">        }</span>
+
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        for (String mimeType : feature.mimeTypeList) {</span>
+<span class="fc" id="L93">            ASBMime asbMime = new ASBMime(versionName, type, DEFAULT_DESC, packageName, className, actionName,</span>
+                    mimeType, UPDATED_BY_MANIFEST);
+<span class="fc" id="L95">            daoFactory.getASBMimeDAO(asbId).create(asbMime);</span>
+<span class="fc" id="L96">        }</span>
+
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        for (String uri : feature.schemeList) {</span>
+<span class="fc" id="L99">            ASBUri asbUri = new ASBUri(versionName, type, DEFAULT_DESC, packageName, className, actionName, uri,</span>
+                    DEFAULT_DESC, UPDATED_BY_MANIFEST);
+<span class="fc" id="L101">            daoFactory.getASBUriDAO(asbId).create(asbUri);</span>
+<span class="fc" id="L102">        }</span>
+
+<span class="fc" id="L104">        return asbId;</span>
+    }
+
+    private static void updateManifestPath(String type, long id, String manifestPath) {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (id == -1) {</span>
+<span class="nc" id="L109">            LOGGER.error(&quot;Cannot update it becuase id value is negative&quot;);</span>
+<span class="nc" id="L110">            return;</span>
+        }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (type.equals(&quot;provider&quot;)) {</span>
+<span class="nc" id="L113">            ProviderDAO providerDAO = daoFactory.getProviderDAO();</span>
+<span class="nc" id="L114">            providerDAO.update(id, manifestPath);</span>
+<span class="nc" id="L115">        } else {</span>
+<span class="nc" id="L116">            ASBDAO asbDAO = daoFactory.getASBDAO();</span>
+<span class="nc" id="L117">            asbDAO.update(id, manifestPath);</span>
+        }
+<span class="nc" id="L119">    }</span>
+
+    public static FeatureProvider find(String packageName, String versionName) {
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (isEmpty(packageName)) {</span>
+<span class="nc" id="L123">            throw new LGAppInterfaceDBException(&quot;argument error&quot;);</span>
+        }
+
+<span class="fc" id="L126">        FeatureProvider fp = new FeatureProvider();</span>
+<span class="fc" id="L127">        fp.packageName = packageName;</span>
+<span class="fc" id="L128">        fp.versionName = versionName;</span>
+
+<span class="fc" id="L130">        listProviderFeature(packageName, versionName, fp);</span>
+<span class="fc" id="L131">        listASBFeature(packageName, versionName, fp);</span>
+
+<span class="fc" id="L133">        return fp;</span>
+    }
+
+    @SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+    private static void listProviderFeature(String packageName,
+            String versionName, FeatureProvider fp) {
+<span class="fc" id="L139">        ProviderDAO providerDAO = daoFactory.getProviderDAO();</span>
+<span class="fc" id="L140">        List&lt;Provider&gt; providerRows = (List)providerDAO.list(SQL.Provider.Where.PACKAGE_AND_VERSION, packageName,</span>
+                versionName);
+
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (Provider provider : providerRows) {</span>
+<span class="fc" id="L144">            Feature feature = new Feature();</span>
+<span class="fc" id="L145">            feature.type = provider.type;</span>
+<span class="fc" id="L146">            feature.className = provider.className;</span>
+<span class="fc" id="L147">            feature.readPermission = provider.readPermission;</span>
+<span class="fc" id="L148">            feature.writePermission = provider.writePermission;</span>
+<span class="fc" id="L149">            feature.authorities = provider.authorities;</span>
+<span class="fc" id="L150">            fp.addFeature(feature);</span>
+<span class="fc" id="L151">        }</span>
+<span class="fc" id="L152">    }</span>
+
+    @SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+    private static void listASBFeature(String packageName,
+            String versionName, FeatureProvider fp) {
+<span class="fc" id="L157">        ASBDAO asbDAO = daoFactory.getASBDAO();</span>
+<span class="fc" id="L158">        List&lt;ASB&gt; asbRows = (List)asbDAO.list(SQL.ASB.Where.PACKAGE_AND_VERSION, packageName, versionName);</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        for (ASB asb : asbRows) {</span>
+<span class="fc" id="L161">            long asbId = asb.getId();</span>
+<span class="fc" id="L162">            Feature feature = new Feature();</span>
+<span class="fc" id="L163">            feature.type = asb.type;</span>
+<span class="fc" id="L164">            feature.className = asb.className;</span>
+<span class="fc" id="L165">            feature.actionName = asb.actionName;</span>
+
+<span class="fc" id="L167">            ASBCategoryDAO categoryDAO = daoFactory.getASBCategoryDAO(asbId);</span>
+<span class="fc" id="L168">            List&lt;ASBCategory&gt; categoryRows = (List)categoryDAO.list();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">            for (ASBCategory category : categoryRows) {</span>
+<span class="fc" id="L170">                feature.addCategory(category.category);</span>
+<span class="fc" id="L171">            }</span>
+
+<span class="fc" id="L173">            ASBMimeDAO mimeDAO = daoFactory.getASBMimeDAO(asbId);</span>
+<span class="fc" id="L174">            List&lt;ASBMime&gt; mimeRows = (List)mimeDAO.list();</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">            for (ASBMime mime : mimeRows) {</span>
+<span class="fc" id="L176">                feature.addMimeType(mime.mimeType);</span>
+<span class="fc" id="L177">            }</span>
+
+<span class="fc" id="L179">            ASBUriDAO uriDAO = daoFactory.getASBUriDAO(asbId);</span>
+<span class="fc" id="L180">            List&lt;ASBUri&gt; uriRows = (List)uriDAO.list();</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">            for (ASBUri uri : uriRows) {</span>
+<span class="fc" id="L182">                feature.addScheme(uri.uri);</span>
+<span class="fc" id="L183">            }</span>
+
+<span class="fc" id="L185">            fp.addFeature(feature);</span>
+<span class="fc" id="L186">        }</span>
+<span class="fc" id="L187">    }</span>
+
+    public static void delete(String packageName, String versionName) {
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (isEmpty(packageName)) {</span>
+<span class="nc" id="L191">            throw new LGAppInterfaceDBException(&quot;argument error&quot;);</span>
+        }
+
+<span class="fc" id="L194">        deleteProviderFeature(packageName, versionName);</span>
+<span class="fc" id="L195">        deleteASBFeature(packageName, versionName);</span>
+<span class="fc" id="L196">    }</span>
+
+    @SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+    private static void deleteProviderFeature(String packageName,
+            String versionName) {
+<span class="fc" id="L201">        ProviderDAO providerDAO = daoFactory.getProviderDAO();</span>
+<span class="fc" id="L202">        List&lt;Provider&gt; providerRows = (List)providerDAO.list(SQL.Provider.Where.PACKAGE_AND_VERSION, packageName,</span>
+                versionName);
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        for (Provider provider : providerRows) {</span>
+<span class="fc" id="L205">            long id = provider.getId();</span>
+<span class="fc" id="L206">            providerDAO.delete(id);</span>
+<span class="fc" id="L207">        }</span>
+<span class="fc" id="L208">    }</span>
+
+    @SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+    private static void deleteASBFeature(String packageName,
+            String versionName) {
+<span class="fc" id="L213">        ASBDAO asbDAO = daoFactory.getASBDAO();</span>
+<span class="fc" id="L214">        List&lt;ASB&gt; asbRows = (List)asbDAO.list(SQL.ASB.Where.PACKAGE_AND_VERSION, packageName, versionName);</span>
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        for (ASB asb : asbRows) {</span>
+<span class="fc" id="L216">            long id = asb.getId();</span>
+<span class="fc" id="L217">            asbDAO.delete(id);</span>
+<span class="fc" id="L218">        }</span>
+<span class="fc" id="L219">    }</span>
+
+    private static boolean isEmpty(String str) {
+<span class="pc bpc" id="L222" title="1 of 4 branches missed.">        return str == null || str.isEmpty();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

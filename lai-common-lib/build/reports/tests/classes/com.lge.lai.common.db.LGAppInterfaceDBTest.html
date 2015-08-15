@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class com.lge.lai.common.db.LGAppInterfaceDBTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class com.lge.lai.common.db.LGAppInterfaceDBTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.lge.lai.common.db.html">com.lge.lai.common.db</a> &gt; LGAppInterfaceDBTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">20.723s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">allOperations</td>
+<td>20.707s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">checkThrowException</td>
+<td>0.016s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>[INFO ] 2015-08-15 17:48:08 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@1044ec1: INSERT INTO LGAppIF.asb (_version, _type, _desc, _pkg_name, _cls_name, _action_name, _updated_by, _ctime) VALUES ('1.0.0', 'activity', 'description', 'com.example.helloworld', 'com.example.helloworld.MainActivity', 'android.intent.ACTION.GET_CONTENT', 'manifest', '2015-08-15 17:48:08')
+[INFO ] 2015-08-15 17:48:09 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@413447: INSERT INTO LGAppIF.asb_category (_asb_id, _category) VALUES (12163, 'android.intent.CATEGORY.MAIN')
+[INFO ] 2015-08-15 17:48:09 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@befcfd: INSERT INTO LGAppIF.asb_category (_asb_id, _category) VALUES (12163, 'android.intent.CATEGORY.DEFAULT')
+[INFO ] 2015-08-15 17:48:10 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@3044f9: INSERT INTO LGAppIF.asb_mime (_asb_id, _mime_type) VALUES (12163, 'image/*')
+[INFO ] 2015-08-15 17:48:12 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@10035e7: INSERT INTO LGAppIF.asb_mime (_asb_id, _mime_type) VALUES (12163, 'audio/*')
+[INFO ] 2015-08-15 17:48:15 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@17e62ad: INSERT INTO LGAppIF.asb_uri (_asb_id, _uri, _uri_desc) VALUES (12163, 'http', 'description')
+[INFO ] 2015-08-15 17:48:15 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@1a3fa82: INSERT INTO LGAppIF.asb_uri (_asb_id, _uri, _uri_desc) VALUES (12163, 'file', 'description')
+[INFO ] 2015-08-15 17:48:15 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@11c0352: INSERT INTO LGAppIF.provider (_version, _type, _desc, _pkg_name, _cls_name, _table_name, _read_permission, _write_permission, _authorities, _primary, _updated_by, _ctime) VALUES ('1.0.0', 'provider', 'description', 'com.example.helloworld', 'com.example.helloworld.MainProvider', 'table', 'android.permission.READ', 'android.permission.WRITE', 'hellworld.authrotieis', '_id', 'manifest', '2015-08-15 17:48:15')
+[INFO ] 2015-08-15 17:48:19 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@a109ac: SELECT * FROM LGAppIF.provider WHERE _pkg_name = 'com.example.helloworld' AND _version = '1.0.0'
+[INFO ] 2015-08-15 17:48:19 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@1f70d3c: SELECT * FROM LGAppIF.asb WHERE _pkg_name = 'com.example.helloworld' AND _version = '1.0.0'
+[INFO ] 2015-08-15 17:48:19 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@7ab3c7: SELECT * FROM (SELECT * FROM LGAppIF.asb) AS ASB_T INNER JOIN (SELECT * FROM LGAppIF.asb_category WHERE _asb_id = 12163) AS ASB_CATEGORY_T ON ASB_T._id = ASB_CATEGORY_T._asb_id
+[INFO ] 2015-08-15 17:48:20 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@7dfe39: SELECT * FROM (SELECT * FROM LGAppIF.asb) AS ASB_T INNER JOIN (SELECT * FROM LGAppIF.asb_mime WHERE _asb_id = 12163) AS ASB_MIME_T ON ASB_T._id = ASB_MIME_T._asb_id
+[INFO ] 2015-08-15 17:48:27 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@6aed3a: SELECT * FROM (SELECT * FROM LGAppIF.asb) AS ASB_T INNER JOIN (SELECT * FROM LGAppIF.asb_uri WHERE _asb_id = 12163) AS ASB_URI_T ON ASB_T._id = ASB_URI_T._asb_id
+[INFO ] 2015-08-15 17:48:27 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@18360d5: SELECT * FROM LGAppIF.provider WHERE _pkg_name = 'com.example.helloworld' AND _version = '1.0.0'
+[INFO ] 2015-08-15 17:48:27 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@1522be2: DELETE FROM LGAppIF.provider WHERE _id = 363
+[INFO ] 2015-08-15 17:48:27 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@fbb21e: SELECT * FROM LGAppIF.asb WHERE _pkg_name = 'com.example.helloworld' AND _version = '1.0.0'
+[INFO ] 2015-08-15 17:48:28 BaseDAO - com.mysql.jdbc.JDBC4PreparedStatement@b930e4: DELETE FROM LGAppIF.asb WHERE _id = 12163
+[ERROR] 2015-08-15 17:48:28 LGAppInterfaceDBException - nothing to write
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 2.5</a> at 2015. 8. 15 오후 5:48:51</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FileToText.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.util</a> &gt; <span class="el_source">FileToText.java</span></div><h1>FileToText.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.util;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class FileToText {
+    private File file;
+    private String charset;
+<span class="pc" id="L12">    private StringBuilder data = new StringBuilder();</span>
+
+    /**
+     * Create FileToText with given file
+     * 
+     * @param file file to be converted to text
+     * @throws IOException throws while file is being read
+     */
+<span class="fc" id="L20">    public FileToText(File file) throws IOException {</span>
+<span class="fc" id="L21">        this.file = file;</span>
+<span class="fc" id="L22">        this.charset = &quot;UTF-8&quot;;</span>
+<span class="fc" id="L23">        convert();</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * Create FileToText with given file and charset
+     * 
+     * @param file file to be coverted to text
+     * @param charset encoding type
+     * @throws IOException throws while file is being read
+     */
+<span class="nc" id="L33">    public FileToText(File file, String charset) throws IOException {</span>
+<span class="nc" id="L34">        this.file = file;</span>
+<span class="nc" id="L35">        this.charset = charset;</span>
+<span class="nc" id="L36">        convert();</span>
+<span class="nc" id="L37">    }</span>
+
+    private void convert() throws IOException {
+<span class="fc" id="L40">        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));</span>
+<span class="fc" id="L41">        String line = null;</span>
+<span class="fc" id="L42">        String ls = System.getProperty(&quot;line.separator&quot;);</span>
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        while ((line = reader.readLine()) != null) {</span>
+<span class="fc" id="L45">            data.append(line);</span>
+<span class="fc" id="L46">            data.append(ls);</span>
+        }
+
+<span class="fc" id="L49">        reader.close();</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Get String encoded as given charset
+     * 
+     * @return String converted from given file
+     */
+    public String get() {
+<span class="fc" id="L58">        return data.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

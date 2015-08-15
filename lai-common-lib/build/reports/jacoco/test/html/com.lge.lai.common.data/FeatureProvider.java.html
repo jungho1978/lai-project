@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FeatureProvider.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.data</a> &gt; <span class="el_source">FeatureProvider.java</span></div><h1>FeatureProvider.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.data;
+
+import java.util.Comparator;
+import java.util.List;
+
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Lists;
+
+<span class="fc" id="L9">public class FeatureProvider {</span>
+    public String packageName;
+    public String versionName;
+<span class="fc" id="L12">    public List&lt;Feature&gt; featureList = Lists.newArrayList();</span>
+
+    public void addFeature(Feature feature) {
+<span class="fc" id="L15">        featureList.add(feature);</span>
+<span class="fc" id="L16">    }</span>
+
+    public void addAllFeatures(List&lt;Feature&gt; featureList) {
+<span class="nc" id="L19">        this.featureList.addAll(featureList);</span>
+<span class="nc" id="L20">    }</span>
+
+    @Override public boolean equals(Object obj) {
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">        if (obj instanceof FeatureProvider) {</span>
+<span class="fc" id="L24">            FeatureProvider other = (FeatureProvider)obj;</span>
+<span class="fc" id="L25">            int result = ComparisonChain.start()</span>
+                    .compare(packageName, other.packageName, STRING_COMPARATOR)
+                    .compare(versionName, other.versionName, STRING_COMPARATOR).result();
+<span class="fc bfc" id="L28" title="All 2 branches covered.">            if (result != 0) {</span>
+<span class="fc" id="L29">                return false;</span>
+            }
+
+<span class="fc" id="L32">            List&lt;Feature&gt; myFeatureList = this.featureList;</span>
+<span class="fc" id="L33">            List&lt;Feature&gt; yourFeatureList = other.featureList;</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">            if (myFeatureList.size() == yourFeatureList.size()) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">                for (Feature yourFeature : yourFeatureList) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">                    if (!hasSameFeature(yourFeature)) {</span>
+<span class="fc" id="L37">                        return false;</span>
+                    }
+<span class="fc" id="L39">                }</span>
+            } else {
+<span class="nc" id="L41">                return false;</span>
+            }
+<span class="fc" id="L43">            return true;</span>
+        } else {
+<span class="nc" id="L45">            return false;</span>
+        }
+    }
+
+    private boolean hasSameFeature(Feature feature) {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (Feature myFeature : this.featureList) {</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            if (myFeature.equals(feature)) {</span>
+<span class="fc" id="L52">                return true;</span>
+            }
+<span class="fc" id="L54">        }</span>
+<span class="fc" id="L55">        return false;</span>
+    }
+
+<span class="fc" id="L58">    private Comparator&lt;String&gt; STRING_COMPARATOR = new Comparator&lt;String&gt;() {</span>
+        @Override public int compare(String myString, String yourString) {
+<span class="fc bfc" id="L60" title="All 4 branches covered.">            if (myString != null &amp;&amp; yourString == null) {</span>
+<span class="fc" id="L61">                return -1;</span>
+            }
+<span class="pc bpc" id="L63" title="1 of 4 branches missed.">            if (myString == null &amp;&amp; yourString != null) {</span>
+<span class="nc" id="L64">                return -1;</span>
+            }
+<span class="pc bpc" id="L66" title="1 of 4 branches missed.">            if (myString == null &amp;&amp; yourString == null) {</span>
+<span class="fc" id="L67">                return 0;</span>
+            }
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (myString.trim().equals(yourString.trim())) {</span>
+<span class="fc" id="L70">                return 0;</span>
+            }
+<span class="nc" id="L72">            return -1;</span>
+        }
+    };
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ASBCategoryDAO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.db.dao</a> &gt; <span class="el_source">ASBCategoryDAO.java</span></div><h1>ASBCategoryDAO.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.db.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import com.lge.lai.common.db.dto.ASBCategory;
+
+public class ASBCategoryDAO extends BaseDAO implements DAOCallback {
+    private long asbId;
+
+    public ASBCategoryDAO(long asbId, DAOFactory daoFactory) {
+<span class="fc" id="L13">        super(daoFactory);</span>
+<span class="fc" id="L14">        this.asbId = asbId;</span>
+<span class="fc" id="L15">    }</span>
+
+    @Override
+    public Object find(long id) {
+<span class="fc" id="L19">        return find(this, SQL.ASBCategory.FIND_BY_ID, id).get(0);</span>
+    }
+
+    @Override
+    public List&lt;Object&gt; list() {
+<span class="fc" id="L24">        return find(this, SQL.ASBCategory.FIND_BY_FK, asbId);</span>
+    }
+
+    public List&lt;Object&gt; list(String category) {
+<span class="nc" id="L28">        return find(this, SQL.ASBCategory.FIND_BY_FK_AND_CATEGORY, asbId, category);</span>
+    }
+
+    @Override
+    public long create(Object obj) {
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (obj instanceof ASBCategory) {</span>
+<span class="fc" id="L34">            ASBCategory asbCategory = (ASBCategory)obj;</span>
+<span class="fc" id="L35">            Object[] values = { asbId, asbCategory.category };</span>
+<span class="fc" id="L36">            return create(SQL.ASBCategory.INSERT, values);</span>
+        } else {
+<span class="nc" id="L38">            throw new DAOException(&quot;instance is not valid: &quot; + obj.getClass().getName());</span>
+        }
+    }
+
+    @Override
+    public void delete(long id) {
+<span class="fc" id="L44">        delete(SQL.ASBCategory.DELETE_BY_ID, id);</span>
+<span class="fc" id="L45">    }</span>
+
+    @Override
+    public Object convertToDTO(ResultSet rs) throws SQLException {
+<span class="fc" id="L49">        long id = rs.getLong(&quot;_id&quot;);</span>
+<span class="fc" id="L50">        String version = rs.getString(&quot;_version&quot;);</span>
+<span class="fc" id="L51">        String type = rs.getString(&quot;_type&quot;);</span>
+<span class="fc" id="L52">        String desc = rs.getString(&quot;_desc&quot;);</span>
+<span class="fc" id="L53">        String packageName = rs.getString(&quot;_pkg_name&quot;);</span>
+<span class="fc" id="L54">        String className = rs.getString(&quot;_cls_name&quot;);</span>
+<span class="fc" id="L55">        String actionName = rs.getString(&quot;_action_name&quot;);</span>
+<span class="fc" id="L56">        String category = rs.getString(&quot;_category&quot;);</span>
+<span class="fc" id="L57">        String updatedBy = rs.getString(&quot;_updated_by&quot;);</span>
+<span class="fc" id="L58">        return new ASBCategory(version, type, desc, packageName, className, actionName, category, updatedBy, id);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

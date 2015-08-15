@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>InterfaceValidator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.validation</a> &gt; <span class="el_source">InterfaceValidator.java</span></div><h1>InterfaceValidator.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.validation;
+
+import java.lang.reflect.Method;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import android.content.ComponentName;
+import android.content.Intent;
+
+import com.lge.lai.common.annotation.InterfaceWith;
+import com.lge.lai.common.annotation.InterfaceWith.Call;
+import com.lge.lai.common.annotation.InterfaceWith.Component;
+import com.lge.lai.common.db.dao.DAOFactory;
+
+public class InterfaceValidator {
+<span class="nc" id="L17">    static Logger LOGGER = LogManager.getLogger(InterfaceValidator.class.getName());</span>
+    private static final String SPECIFIC_KEY = &quot;LGAppIF.db&quot;;
+
+    private DAOFactory daoFactory;
+    private Class&lt;?&gt; clazz;
+
+<span class="nc" id="L23">    public InterfaceValidator(Class&lt;?&gt; clazz) {</span>
+<span class="nc" id="L24">        this.clazz = clazz;</span>
+<span class="nc" id="L25">        daoFactory = DAOFactory.getInstance(SPECIFIC_KEY);</span>
+<span class="nc" id="L26">    }</span>
+
+    public boolean validates(Intent intent) {
+<span class="nc" id="L29">        String caller = getCallerMethodName();</span>
+<span class="nc" id="L30">        LOGGER.info(&quot;caller method: &quot; + caller);</span>
+<span class="nc" id="L31">        return true;</span>
+    }
+
+    public boolean validates(String caller, Intent intent) {
+<span class="nc" id="L35">        Method m = null;</span>
+        try {
+<span class="nc" id="L37">            m = clazz.getDeclaredMethod(caller);</span>
+<span class="nc" id="L38">        } catch (Exception e) {</span>
+<span class="nc" id="L39">            LOGGER.error(e);</span>
+<span class="nc" id="L40">            return false;</span>
+<span class="nc" id="L41">        }</span>
+
+<span class="nc" id="L43">        InterfaceWith interfaceWith = m.getAnnotation(InterfaceWith.class);</span>
+<span class="nc" id="L44">        return validates(interfaceWith.toPackage(), interfaceWith.callType(), interfaceWith.componentType(), intent);</span>
+    }
+
+    public boolean validates(String toPackage, Call callType, Component componentType, Intent intent) {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (callType == Call.EXPLICIT) {</span>
+<span class="nc" id="L49">            return false;</span>
+        } else {
+<span class="nc" id="L51">            return false;</span>
+        }
+    }
+    
+    private boolean processExplicitCall(CallerInfo callerInfo, Intent intent) {
+<span class="nc" id="L56">        ComponentName componentName = intent.getComponent();</span>
+<span class="nc" id="L57">        String packageName = componentName.getPackageName();</span>
+<span class="nc" id="L58">        String className = componentName.getClassName();</span>
+<span class="nc" id="L59">        return false;</span>
+    }
+
+    private String getCallerMethodName() {
+<span class="nc" id="L63">        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();</span>
+<span class="nc" id="L64">        StackTraceElement e = stackTraceElements[3];</span>
+<span class="nc" id="L65">        return e.getMethodName();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

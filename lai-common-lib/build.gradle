@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+	compile group: 'org.robolectric', name: 'android-all', version: '4.4_r1-robolectric-1'
 	compile group: 'com.google.guava', name: 'guava', version: '18.+'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.3'

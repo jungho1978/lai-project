@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry sourcepath="C:/Users/USER/.gradle/caches/modules-2/files-2.1/org.robolectric/android-all/4.4_r1-robolectric-1/69272deb5c6c88b36b174a88413c71c8666f9e07/android-all-4.4_r1-robolectric-1-sources.jar" kind="lib" path="C:/Users/USER/.gradle/caches/modules-2/files-2.1/org.robolectric/android-all/4.4_r1-robolectric-1/2d8399b312aa8f63bfe3af55d4168b53ba6efc12/android-all-4.4_r1-robolectric-1.jar"/>
 	<classpathentry sourcepath="C:/Users/USER/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/ad97fe8faaf01a3d3faacecd58e8fa6e78a973ca/guava-18.0-sources.jar" kind="lib" path="C:/Users/USER/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/USER/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.6/380ef5226de2c85ff3b38cbfefeea881c5fce09d/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry sourcepath="C:/Users/USER/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.3/2083f2f885111e2d672a28b5657c465360559663/log4j-api-2.3-sources.jar" kind="lib" path="C:/Users/USER/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.3/8d85ef2675d1b45fe78adad021f809bdf12f2eeb/log4j-api-2.3.jar"/>

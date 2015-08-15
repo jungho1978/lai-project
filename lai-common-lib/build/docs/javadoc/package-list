@@ -1,3 +1,7 @@
-com.lge.common.dao
-com.lge.common.data
-com.lge.common.dto
+com.lge.lai.common.annotation
+com.lge.lai.common.data
+com.lge.lai.common.db
+com.lge.lai.common.db.dao
+com.lge.lai.common.db.dto
+com.lge.lai.common.util
+com.lge.lai.common.validation

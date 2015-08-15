@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DAOFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.db.dao</a> &gt; <span class="el_source">DAOFactory.java</span></div><h1>DAOFactory.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.db.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import com.google.common.annotations.VisibleForTesting;
+
+<span class="fc" id="L9">public abstract class DAOFactory {</span>
+    private static final String PROPERTY_URL = &quot;url&quot;;
+    private static final String PROPERTY_USERNAME = &quot;username&quot;;
+    private static final String PROPERTY_PASSWORD = &quot;password&quot;;
+
+    private static final String DRIVER = &quot;com.mysql.jdbc.Driver&quot;;
+
+    public static DAOFactory getInstance(String name) throws DAOException {
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        if (name == null) {</span>
+<span class="fc" id="L18">            throw new DAOException(&quot;Database name is null&quot;);</span>
+        }
+
+<span class="fc" id="L21">        DAOProperties properties = new DAOProperties(name);</span>
+<span class="fc" id="L22">        String url = properties.getProperty(PROPERTY_URL, true);</span>
+<span class="fc" id="L23">        String username = properties.getProperty(PROPERTY_USERNAME, true);</span>
+<span class="fc" id="L24">        String password = properties.getProperty(PROPERTY_PASSWORD, true);</span>
+
+        try {
+<span class="fc" id="L27">            Class.forName(DRIVER);</span>
+<span class="nc" id="L28">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L29">            throw new DAOException(&quot;Driver class '&quot; + DRIVER + &quot;' is missing.&quot;, e);</span>
+<span class="fc" id="L30">        }</span>
+
+<span class="fc" id="L32">        return new DriverManagerDAOFactory(url, username, password);</span>
+    }
+
+    public ASBDAO getASBDAO() {
+<span class="fc" id="L36">        return new ASBDAO(this);</span>
+    }
+
+    public ASBCategoryDAO getASBCategoryDAO(long asbId) {
+<span class="fc" id="L40">        return new ASBCategoryDAO(asbId, this);</span>
+    }
+
+    public ASBMimeDAO getASBMimeDAO(long asbId) {
+<span class="fc" id="L44">        return new ASBMimeDAO(asbId, this);</span>
+    }
+
+    public ASBUriDAO getASBUriDAO(long asbId) {
+<span class="fc" id="L48">        return new ASBUriDAO(asbId, this);</span>
+    }
+
+    public ProviderDAO getProviderDAO() {
+<span class="fc" id="L52">        return new ProviderDAO(this);</span>
+    }
+
+    abstract Connection getConnection() throws SQLException;
+
+    @VisibleForTesting abstract String getUrl();
+
+    @VisibleForTesting abstract String getUsername();
+
+    @VisibleForTesting abstract String getPassword();
+}
+
+class DriverManagerDAOFactory extends DAOFactory {
+    private String url;
+    private String username;
+    private String password;
+
+<span class="fc" id="L69">    public DriverManagerDAOFactory(String url, String username, String password) {</span>
+<span class="fc" id="L70">        this.url = url;</span>
+<span class="fc" id="L71">        this.username = username;</span>
+<span class="fc" id="L72">        this.password = password;</span>
+<span class="fc" id="L73">    }</span>
+
+    @Override Connection getConnection() throws SQLException {
+<span class="fc" id="L76">        return DriverManager.getConnection(url, username, password);</span>
+    }
+
+    @Override public String getUrl() {
+<span class="fc" id="L80">        return this.url;</span>
+    }
+
+    @Override public String getUsername() {
+<span class="fc" id="L84">        return this.username;</span>
+    }
+
+    @Override public String getPassword() {
+<span class="fc" id="L88">        return this.password;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

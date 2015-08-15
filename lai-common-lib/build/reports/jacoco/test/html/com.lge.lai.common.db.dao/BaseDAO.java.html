@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BaseDAO.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-common-lib</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.common.db.dao</a> &gt; <span class="el_source">BaseDAO.java</span></div><h1>BaseDAO.java</h1><pre class="source lang-java linenums">package com.lge.lai.common.db.dao;
+
+import static com.lge.lai.common.db.dao.DAOUtil.close;
+import static com.lge.lai.common.db.dao.DAOUtil.prepareStatement;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
+import com.mysql.jdbc.MysqlErrorNumbers;
+
+public abstract class BaseDAO {
+<span class="fc" id="L19">    static Logger LOGGER = LogManager.getLogger(BaseDAO.class.getName());</span>
+    public DAOFactory daoFactory;
+
+<span class="fc" id="L22">    public BaseDAO(DAOFactory daoFactory) {</span>
+<span class="fc" id="L23">        this.daoFactory = daoFactory;</span>
+<span class="fc" id="L24">    }</span>
+
+    public List&lt;Object&gt; find(DAOCallback callback, String sql, Object... values) {
+<span class="fc" id="L27">        Connection connection = null;</span>
+<span class="fc" id="L28">        PreparedStatement statement = null;</span>
+<span class="fc" id="L29">        ResultSet resultSet = null;</span>
+        try {
+<span class="fc" id="L31">            connection = daoFactory.getConnection();</span>
+<span class="fc" id="L32">            statement = prepareStatement(connection, sql, false, values);</span>
+<span class="fc" id="L33">            LOGGER.info(statement.toString());</span>
+
+<span class="fc" id="L35">            List&lt;Object&gt; objects = Lists.newArrayList();</span>
+<span class="fc" id="L36">            resultSet = statement.executeQuery();</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">            while (resultSet.next()) {</span>
+<span class="fc" id="L38">                objects.add(callback.convertToDTO(resultSet));</span>
+            }
+<span class="fc" id="L40">            return objects;</span>
+<span class="nc" id="L41">        } catch (SQLException e) {</span>
+<span class="nc" id="L42">            throw new DAOException(e);</span>
+        } finally {
+<span class="pc" id="L44">            close(resultSet, statement, connection);</span>
+        }
+    }
+
+    public long create(String sql, Object[] values) {
+<span class="fc" id="L49">        Connection connection = null;</span>
+<span class="fc" id="L50">        PreparedStatement statement = null;</span>
+<span class="fc" id="L51">        ResultSet generatedKeys = null;</span>
+        try {
+<span class="fc" id="L53">            connection = daoFactory.getConnection();</span>
+<span class="fc" id="L54">            statement = prepareStatement(connection, sql, true, values);</span>
+<span class="fc" id="L55">            LOGGER.info(statement.toString());</span>
+
+<span class="fc" id="L57">            int affectedRows = statement.executeUpdate();</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">            if (affectedRows == 0) {</span>
+<span class="nc" id="L59">                throw new DAOException(&quot;Creating failed, no rows affected&quot;);</span>
+            }
+
+<span class="fc" id="L62">            generatedKeys = statement.getGeneratedKeys();</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (generatedKeys.next()) {</span>
+<span class="fc" id="L64">                return generatedKeys.getLong(1);</span>
+            } else {
+<span class="nc" id="L66">                throw new DAOException(&quot;Creating failed, no generated key obtained&quot;);</span>
+            }
+<span class="nc" id="L68">        } catch (SQLException e) {</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (e.getErrorCode() == MysqlErrorNumbers.ER_DUP_ENTRY) {</span>
+<span class="nc" id="L70">                LOGGER.error(&quot;Duplicated entry exist: &quot; + e);</span>
+<span class="nc" id="L71">                return -1;</span>
+            } else {
+<span class="nc" id="L73">                throw new DAOException(e);</span>
+            }
+        } finally {
+<span class="pc" id="L76">            close(generatedKeys, statement, connection);</span>
+        }
+    }
+
+    public int update(String sql, Object[] values) {
+<span class="nc" id="L81">        Connection connection = null;</span>
+<span class="nc" id="L82">        PreparedStatement statement = null;</span>
+        try {
+<span class="nc" id="L84">            connection = daoFactory.getConnection();</span>
+<span class="nc" id="L85">            statement = prepareStatement(connection, sql, false, values);</span>
+<span class="nc" id="L86">            LOGGER.info(statement.toString());</span>
+
+<span class="nc" id="L88">            int affectedRows = statement.executeUpdate();</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (affectedRows == 0) {</span>
+<span class="nc" id="L90">                throw new DAOException(&quot;Updating failed, no rows affected&quot;);</span>
+            }
+<span class="nc" id="L92">            return affectedRows;</span>
+<span class="nc" id="L93">        } catch (SQLException e) {</span>
+<span class="nc" id="L94">            throw new DAOException(e);</span>
+        } finally {
+<span class="nc" id="L96">            close(null, statement, connection);</span>
+        }
+    }
+
+    public void delete(String sql, Object... values) {
+<span class="fc" id="L101">        Connection connection = null;</span>
+<span class="fc" id="L102">        PreparedStatement statement = null;</span>
+        try {
+<span class="fc" id="L104">            connection = daoFactory.getConnection();</span>
+<span class="fc" id="L105">            statement = prepareStatement(connection, sql, false, values);</span>
+<span class="fc" id="L106">            LOGGER.info(statement.toString());</span>
+
+<span class="fc" id="L108">            int affectedRows = statement.executeUpdate();</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            if (affectedRows == 0) {</span>
+<span class="nc" id="L110">                throw new DAOException(&quot;Delete failed, no rows affected&quot;);</span>
+            }
+<span class="nc" id="L112">        } catch (SQLException e) {</span>
+<span class="nc" id="L113">            throw new DAOException(e);</span>
+        } finally {
+<span class="pc" id="L115">            close(null, statement, connection);</span>
+<span class="fc" id="L116">        }</span>
+<span class="fc" id="L117">    }</span>
+
+    public abstract Object find(long id);
+
+    public abstract List&lt;Object&gt; list();
+
+    public abstract long create(Object obj);
+
+    public abstract void delete(long id);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
