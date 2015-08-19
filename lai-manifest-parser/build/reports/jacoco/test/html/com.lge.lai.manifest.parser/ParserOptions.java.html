@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ParserOptions.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-manifest-parser</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.manifest.parser</a> &gt; <span class="el_source">ParserOptions.java</span></div><h1>ParserOptions.java</h1><pre class="source lang-java linenums">package com.lge.lai.manifest.parser;
+
+import java.io.File;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
+public class ParserOptions {
+    static final String ANDROIDMANIFEST = &quot;AndroidManifest.xml&quot;;
+    
+    CommandLine commandLine;
+
+<span class="fc" id="L16">    public ParserOptions(String[] args) {</span>
+<span class="fc" id="L17">        Options options = new Options();</span>
+<span class="fc" id="L18">        options.addOption(&quot;m&quot;, &quot;manifest&quot;, true, &quot;AndroidManifest.xml file path&quot;);</span>
+<span class="fc" id="L19">        options.addOption(&quot;o&quot;, &quot;output&quot;, true, &quot;output file name&quot;);</span>
+<span class="fc" id="L20">        options.addOption(&quot;u&quot;, &quot;upload&quot;, false, &quot;upload result to database&quot;);</span>
+
+        try {
+<span class="fc" id="L23">            commandLine = new DefaultParser().parse(options, args);</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">            if (!commandLine.hasOption(&quot;m&quot;)) {</span>
+<span class="fc" id="L25">                showHelp(options);</span>
+<span class="fc" id="L26">                throw new RuntimeException(&quot;mandatory option not included&quot;);</span>
+            } else {
+<span class="fc" id="L28">                String manifest = commandLine.getOptionValue(&quot;m&quot;);</span>
+<span class="pc bpc" id="L29" title="2 of 4 branches missed.">                if (!manifest.endsWith(ANDROIDMANIFEST)</span>
+                        || !new File(manifest).exists()) {
+<span class="nc" id="L31">                    throw new RuntimeException(&quot;file not found '&quot; + manifest + &quot;'&quot;);</span>
+                }
+            }
+<span class="nc" id="L34">        } catch (ParseException e) {</span>
+<span class="nc" id="L35">            showHelp(options);</span>
+<span class="nc" id="L36">            throw new RuntimeException(e);</span>
+<span class="fc" id="L37">        }</span>
+<span class="fc" id="L38">    }</span>
+
+    public String getOption(String opt) {
+<span class="nc" id="L41">        return commandLine.getOptionValue(opt);</span>
+    }
+
+    public boolean hasOption(String opt) {
+<span class="fc" id="L45">        return commandLine.hasOption(opt);</span>
+    }
+
+    private void showHelp(Options opts) {
+<span class="fc" id="L49">        HelpFormatter formatter = new HelpFormatter();</span>
+<span class="fc" id="L50">        formatter.setWidth(100);</span>
+<span class="fc" id="L51">        formatter.printHelp(&quot;java -jar lai-manifest-parser.java&quot;, opts);</span>
+<span class="fc" id="L52">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

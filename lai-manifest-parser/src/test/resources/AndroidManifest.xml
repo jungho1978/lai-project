@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2013 The Android Open Source Project 
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    coreApp="true"
+    package="com.android.incallui"
+    android:sharedUserId="android.uid.phone" >
+
+    <original-package android:name="com.android.incallui" />
+
+    <uses-sdk android:minSdkVersion="MNC" android:targetSdkVersion="MNC"/>
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CONNECTIVITY_INTERNAL" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- BT_S : [PSIX-5060] Bluetooth Handsfree Picker interface -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- BT_E : [PSIX-5060] Bluetooth Handsfree Picker interface -->
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <!-- NFC Permission Start -->
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-permission android:name="android.permission.CONTROL_INCALL_EXPERIENCE" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+    <!-- NFC Permission END -->
+    <!-- for new SNS DB -->
+    <uses-permission android:name="android.permission.READ_SOCIAL_STREAM" />
+    <!-- for new SNS DB -->
+    <!-- CEQUINT code begin -->
+    <uses-permission android:name="com.cequint.ecid.CALLER_ID_LOOKUP" />
+    <!-- CEQUINT code end -->
+    <!-- Request SystemUI : Indicator bg color permission -->
+    <uses-permission android:name="com.lge.systemui.permission.USE_NOTIFICATION_FLAGS" />
+    <uses-permission android:name="com.lge.permission.LGPOWER_MANAGER_HELPER" />
+
+    <uses-permission android:name="android.permission.MANAGE_USERS" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="com.lge.phone.permission.ACCESS_SETTINGS" />
+    <uses-permission android:name="android.permission.STATUS_BAR"/>
+
+    <uses-permission android:name="com.lge.phone.permission.ACCESS_PHONE_CONTEXT"/>
+    <!-- CONE UI -->
+    <uses-permission android:name="com.lge.permission.USE_SIGNBOARD_FLAG"/>
+    <application
+        android:name="InCallApp"
+        android:label="@string/callAppLabel"
+        android:supportsRtl="true"
+        android:icon="@mipmap/ic_launcher_phone"
+         >
+        <meta-data
+            android:name="com.lge.guestmode.ALWAYSSTART"
+            android:value="true" />
+        <meta-data
+            android:name="com.lge.app.forceHideImmersiveConfirm"
+            android:value="true" />
+
+        <!-- floating mode -->
+        <uses-library android:name="com.lge.app.floating" android:required="false" />
+        
+        <!-- BT_S : [PSIX-5060] Bluetooth Handsfree Picker interface -->
+        <uses-library android:name="com.lge.bluetooth" android:required="false"/>
+        <!-- BT_E : [PSIX-5060] Bluetooth Handsfree Picker interface -->
+        <!--
+             Main in-call UI activity.  This is never launched directly
+             from outside the phone app; instead, it's either launched by
+             the OutgoingCallBroadcaster (for outgoing calls), or as the
+             fullScreenIntent of a notification (for incoming calls.)
+        -->
+
+        <uses-library android:name="com.lge.mdm" android:required="false" />
+
+        <activity
+            android:name=".InCallActivity"
+            android:configChanges="keyboardHidden"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="@string/callAppLabel"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.InCallScreen"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+
+        <!-- for DSDA -->
+        <activity
+            android:name=".MSimInCallActivity"
+            android:configChanges="keyboardHidden"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/MSimInCallScreen"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name=".LGInCallAlertingDialogActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="sensor"
+            android:theme="@style/Theme.SrvccInCallScreen"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+
+        <!-- floating mode -->
+        <service 
+            android:name="com.lge.app.floating.FloatingWindowService"
+            android:exported="false" />
+        
+        <!-- CEQUINT code begin -->
+        <service android:name="EcidClient$EcidInCallService" android:exported="true">
+            <meta-data android:name="lgapi.exception.reason" android:value="called_from_framework" />
+        </service>
+        <!-- CEQUINT code end -->
+
+        <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
+        <receiver
+            android:name="InCallApp$NotificationBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.android.incallui.ACTION_HANG_UP_ONGOING_CALL" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.android.incallui.InCallServiceImpl"
+                 android:permission="android.permission.BIND_INCALL_SERVICE" >
+            <meta-data android:name="android.telecom.IN_CALL_SERVICE_UI" android:value="true" />
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+            <intent-filter>
+                <action android:name="android.telecom.InCallService"/>
+            </intent-filter>
+        </service>
+
+        <service android:name="com.android.incallui.LGInCallServiceImpl"
+                 android:permission="android.permission.BIND_INCALL_SERVICE" >
+            <intent-filter>
+                <action android:name="com.lge.incallui.LGInCallService"/>
+            </intent-filter>
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+        </service>
+
+        <service
+            android:name="com.android.incallui.callbubble.LGCallBubbleService" >
+        </service>
+
+        <service
+            android:name="com.android.incallui.LGIncomingCallPopup"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="unspecified" >
+        </service>
+
+        <!-- add VoLTE/VT -->
+        <receiver android:name="com.android.incallui.imscall.videocall.receiver.VideoTelephonyReceiver" >
+            <intent-filter>
+                <action android:name="com.lge.ims.action.IN_VIDEO_CALL" />
+                <action android:name="android.intent.action.VTCALL_START"/>
+                <action android:name="android.intent.action.VTCALL_INCOMING"/>    
+                <action android:name="com.fake.volte.USE_FAKE_IMS_SERVICE"/>
+                <action android:name="com.lge.mdm.intent.action.CAMERA_POLICY_CHANGED"/>
+                <action android:name="com.lge.ltecall.action.TRUE_PERSIST_RADIO_VOLTE_FLAG"/>
+            </intent-filter>
+        </receiver>  
+
+        <!-- add VoLTE/VT -->
+        <service
+            android:name="com.android.incallui.imscall.videocall.service.IncomingCallService"
+            android:exported="false"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.lge.action.INCOMINGCALL_SERVICE" >
+                </action>
+            </intent-filter>
+        </service>        
+
+        <!-- add VoLTE/VT -->
+        <activity
+            android:name="com.android.incallui.imscall.ui.ComposeGroupCallActivity"
+            android:excludeFromRecents="true"
+            android:taskAffinity="com.lge.ltecall.common.ComposeGroupCallActivity"
+            android:label="@string/sp_onscreen_manage_members_NORMAL"
+            android:theme="@style/Theme.ComposeGroupCallActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="com.lge.ltecall.common.ui.GROUP_INVITE" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+        </activity>   
+
+        <!-- add VoLTE/VT -->
+        <activity
+            android:name="com.android.incallui.imscall.videocall.ui.PasswordInputActivity"
+            android:label="@string/sp_EnterPassword_NORMAL"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:configChanges="screenSize|keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.lge.ltecall.videocall.PASSWORD_INPUT_SETTING" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+        </activity>
+
+        <!-- add VoLTE/VT -->
+         <activity
+            android:name="com.android.incallui.imscall.videocall.ui.VideoCallImageActivity"
+            android:configChanges="screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:label="@string/title_video_call_image_settings"
+             >
+            <intent-filter>
+                <action android:name="com.lge.vt.VIDEO_CALL_IMAGE_SETTING" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+        </activity>   
+
+         <activity
+            android:name="com.android.incallui.imscall.videocall.ui.InVideoCallActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:theme="@style/Theme.VT.Block.NoActionBar" >
+            <meta-data
+               android:name="com.lge.themeicon.handle_configchange"
+               android:value="true" />
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+            <intent-filter>
+                <action android:name="com.lge.ltecall.videocall.OUTGOING_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.INCOMING_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_VGA_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_QCIF_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_GROUP_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_EARLY_MEDIA" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_VZW_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_ATT_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.ltecall.videocall.IN_COM_VIDEO_CALL" >
+                </action>
+                <action android:name="com.lge.incallui.preview.VIDEOCALL_UPGRADE_REQUEST_OUTBOUND" >
+                </action>
+                <action android:name="com.lge.incallui.preview.VIDEOCALL_UPGRADE_REQUEST_INBOUND" >
+                </action>
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.android.incallui.imscall.preview.TransitionActivity"
+            android:configChanges="screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="com.android.incallui.preview.TRANSITION_ACTIVITY" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
+            <meta-data android:name="lgapi.exception.calledfrom" android:value="internal" />
+        </activity>
+
+        <receiver android:name="TestConferenceStateReceiverVZW" android:exported="false">
+            <intent-filter>
+                 <action android:name="com.lge.intent.ConferenceState"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.android.incallui.multiendpoint.RemoteCallActivity"
+            android:configChanges="keyboardHidden"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:label="@string/callAppLabel"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.InCallScreen" >
+            <intent-filter>
+                <action android:name="com.lge.incallui.multiendpoint.SHOW_REMOTE_CALLS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

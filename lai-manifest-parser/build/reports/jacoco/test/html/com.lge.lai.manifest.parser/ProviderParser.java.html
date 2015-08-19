@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ProviderParser.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lai-manifest-parser</a> &gt; <a href="index.source.html" class="el_package">com.lge.lai.manifest.parser</a> &gt; <span class="el_source">ProviderParser.java</span></div><h1>ProviderParser.java</h1><pre class="source lang-java linenums">package com.lge.lai.manifest.parser;
+
+import java.util.List;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.android.org.chromium.com.google.common.collect.Lists;
+import com.lge.lai.common.data.Feature;
+
+public class ProviderParser implements ComponentParser {
+    private Element component;
+    private ExcelWriter writer;
+<span class="fc" id="L15">    private List&lt;Feature&gt; features = Lists.newArrayList();</span>
+
+<span class="fc" id="L17">    public ProviderParser(Element component, ExcelWriter writer) {</span>
+<span class="fc" id="L18">        this.component = component;</span>
+<span class="fc" id="L19">        this.writer = writer;</span>
+<span class="fc" id="L20">    }</span>
+
+    @Override
+    public boolean validates() {
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (hasExceptionTag(component)) {</span>
+<span class="nc" id="L25">            return false;</span>
+        }
+
+<span class="fc" id="L28">        String exportedValue = component.getAttribute(Manifest.EXPORTED);</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if (!exportedValue.equals(&quot;true&quot;)) {</span>
+<span class="nc" id="L30">            return false;</span>
+        }
+
+<span class="fc" id="L33">        return true;</span>
+    }
+
+    @Override
+    public void parse() {
+<span class="fc" id="L38">        Feature feature = new Feature();</span>
+<span class="fc" id="L39">        feature.type = component.getNodeName();</span>
+<span class="fc" id="L40">        feature.className = component.getAttribute(Manifest.NAME);</span>
+<span class="fc" id="L41">        feature.authorities = component.getAttribute(Manifest.AUTHORITIES);</span>
+<span class="fc" id="L42">        feature.readPermission = component.getAttribute(Manifest.READ_PERMISSION);</span>
+<span class="fc" id="L43">        feature.writePermission = component.getAttribute(Manifest.WRITE_PERMISSION);</span>
+<span class="fc" id="L44">        features.add(feature);</span>
+<span class="fc" id="L45">        writer.setData(component.getNodeName(), feature);</span>
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public List&lt;Feature&gt; getFeatures() {
+<span class="fc" id="L50">        return this.features;</span>
+    }
+
+    private boolean hasExceptionTag(Element element) {
+<span class="fc" id="L54">        NodeList nodeList = element.getElementsByTagName(Manifest.META_DATA);</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        for (int i = 0; i &lt; nodeList.getLength(); i++) {</span>
+<span class="nc" id="L56">            Node node = nodeList.item(i);</span>
+<span class="nc" id="L57">            String name = ((Element)node).getAttribute(Manifest.NAME);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (name.startsWith(Manifest.LGAPI_EXCEPTION)) {</span>
+<span class="nc" id="L59">                return true;</span>
+            }
+        }
+<span class="fc" id="L62">        return false;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
